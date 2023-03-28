@@ -255,7 +255,7 @@ class SequenceLayerStore(LayerStore):
         
         self.color = layer
 
-        if self.color != None and ((layer.index) in self.bset):
+        if self.color != None:
             self.bset.remove(layer.index+1)
             return True
         
