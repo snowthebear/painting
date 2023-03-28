@@ -41,6 +41,7 @@ class TestGrid(unittest.TestCase):
     def test_increase_decrease(self):
         grid = Grid(Grid.DRAW_STYLE_SET, 5, 5)
         control_grid = Grid(Grid.DRAW_STYLE_SET, 5, 5)
+        
 
         fw = FakeWindow(grid)
         fw.on_init()

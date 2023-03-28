@@ -72,3 +72,7 @@ def darken(color, timestamp, x, y):
         max(0, x - 40)
         for x in color
     )
+
+
+# if __name__ == "__main__":
+#     print (black())

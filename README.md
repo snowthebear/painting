@@ -18,8 +18,8 @@
 Note: For all of these you may need to replace `python` with `py` or `python3` depending on your operating system and python version.
 
 ```bash
-python -m pip install virtualenv
-python -m venv venv
+python3 -m pip install virtualenv
+python3 -m venv venv
 ```
 
 Next, activate your virtual environment (Must be done every time you open the terminal)
@@ -46,7 +46,7 @@ source venv/bin/activate
 
 Then install the requirements!
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the program
@@ -60,7 +60,7 @@ python main.py
 To run the visual tests:
 
 ```bash
-python -m visuals.basic
+python3 -m visuals.basic
 python -m visuals.complex
 python -m visuals.styles
 ```

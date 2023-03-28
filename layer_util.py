@@ -19,10 +19,13 @@ class Layer:
     name: str = field(init=False)
     bg: tuple[int, int, int] | None = None
 
+    
+
     def __post_init__(self):
         if hasattr(self.apply, "__bg__"):
             self.bg = self.apply.__bg__
         self.name = self.apply.__name__
+
 
 class background(object):
     """Simple decorator to add a __bg__ property to a layer
@@ -61,3 +64,7 @@ def register(func):
 def get_layers():
     import layers # Force all registrations to occur.
     return LAYERS
+
+
+# if __name__ == "__main__":
+#     print (Layer.__name__)
