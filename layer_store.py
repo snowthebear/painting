@@ -57,6 +57,10 @@ class SetLayerStore(LayerStore):
 
     def __init__(self):
         LayerStore.__init__(self)
+<<<<<<< Updated upstream
+=======
+        # self.color = None
+>>>>>>> Stashed changes
         self.invert = False #a toogle to indicate whether an invert is on or off
 
 
@@ -68,9 +72,12 @@ class SetLayerStore(LayerStore):
         Argument:
             - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
 
+<<<<<<< Updated upstream
         Return:
             - Boolean true if its successfully added, false otherwise.
 
+=======
+>>>>>>> Stashed changes
         Big-O notation : O(1)
         """
         if self.color != layer:
@@ -120,10 +127,14 @@ class SetLayerStore(LayerStore):
         Returns true if the LayerStore was actually changed.
 
         Argument:
+<<<<<<< Updated upstream
             - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
 
         Return:
             - Boolean true if its successfully removed / erased, false otherwise.
+=======
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+>>>>>>> Stashed changes
 
         Big-O notation: O(1)
         """
@@ -138,7 +149,10 @@ class SetLayerStore(LayerStore):
     def special(self):
         """
         Special mode. Different for each store implementation.
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         - self.invert: a toggle to indicate whether the invert is on or off.
 
         Big-O notation: O(1)
@@ -169,11 +183,19 @@ class AdditiveLayerStore(LayerStore):
         Big-O otation = O(1)
 
         Argument:
+<<<<<<< Updated upstream
             - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
+=======
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+>>>>>>> Stashed changes
 
         Return:
             - Boolean true if its successfully added, false otherwise.
         """
+<<<<<<< Updated upstream
+=======
+        print(layer)
+>>>>>>> Stashed changes
 
         if layer != None:
             self.color = layer
@@ -218,7 +240,11 @@ class AdditiveLayerStore(LayerStore):
         Returns true if the LayerStore was actually changed.
 
         Argument:
+<<<<<<< Updated upstream
             - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
+=======
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+>>>>>>> Stashed changes
 
         Return :
             - Boolean true if its successfully removed / erased , false otherwise.
@@ -273,9 +299,12 @@ class SequenceLayerStore(LayerStore):
         Argument:
             - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
 
+<<<<<<< Updated upstream
         Return:
             - Boolean true if its successfully added, false otherwise.
 
+=======
+>>>>>>> Stashed changes
         """
         if self.color != layer and ((layer.index+1) not in self.bset):
             self.bset.add(layer.index+1)
@@ -323,9 +352,12 @@ class SequenceLayerStore(LayerStore):
 
         Argument:
             - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+<<<<<<< Updated upstream
 
         Return:
             - Boolean true if its successfully removed / erased, false otherwise.
+=======
+>>>>>>> Stashed changes
         """
         
         self.color = layer

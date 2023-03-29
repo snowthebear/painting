@@ -21,6 +21,7 @@ class UndoTracker:
         """
         if not self.stack_undo.is_full():
             self.stack_undo.push(action)
+            self.stack_redo.clear()
         
 
     def undo(self, grid: Grid) -> PaintAction|None:

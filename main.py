@@ -357,7 +357,6 @@ class MyWindow(arcade.Window):
         """
         return self.replay_action.play_next_action(self.grid)
         
-    
 
     def on_increase_brush_size(self):
         """Called when an increase to the brush size is requested."""
