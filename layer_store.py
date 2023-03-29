@@ -57,14 +57,21 @@ class SetLayerStore(LayerStore):
 
     def __init__(self):
         LayerStore.__init__(self)
-        # self.color = None
-        self.invert = False
+        self.invert = False #a toogle to indicate whether an invert is on or off
 
 
     def add(self, layer: Layer) -> bool:
         """
         Add a layer to the store.
         Returns true if the LayerStore was actually changed.
+
+        Argument:
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return:
+            - Boolean true if its successfully added, false otherwise.
+
+        Big-O notation : O(1)
         """
         if self.color != layer:
             self.color = layer
@@ -78,6 +85,16 @@ class SetLayerStore(LayerStore):
         Returns the colour this square should show, given the current layers.
 
         - self.invert : a boolean that indicate whether the invert is on.
+
+        Arguments:
+            - start: a tuple of number of original colour.
+            - timestamp: an event occurences to an accuracy of milisecond (for rainbow and sparkle)
+            - x: the position of x-axis
+            - y: the position of the y-axis
+
+        Return:
+            - invert.apply: a tuple of number for its colour (r,g,b).
+            - start: a tuple of the original color
         
         Big O-notation: O(1)
         """
@@ -101,6 +118,14 @@ class SetLayerStore(LayerStore):
         """
         Complete the erase action with this layer
         Returns true if the LayerStore was actually changed.
+
+        Argument:
+            - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return:
+            - Boolean true if its successfully removed / erased, false otherwise.
+
+        Big-O notation: O(1)
         """
         self.color = layer
         
@@ -113,13 +138,13 @@ class SetLayerStore(LayerStore):
     def special(self):
         """
         Special mode. Different for each store implementation.
+
+        - self.invert: a toggle to indicate whether the invert is on or off.
+
+        Big-O notation: O(1)
         """
-        # q = CircularQueue(len(self.get_color()))
 
-
-        # if self.invert == True:
         self.invert = not self.invert
-        # return (not self.invert)
         
    
 class AdditiveLayerStore(LayerStore):
@@ -130,24 +155,29 @@ class AdditiveLayerStore(LayerStore):
     - special: Reverse the order of current layers (first becomes last, etc.)
     """
 
-    # MIN_CAPACITY = 1
-
     def __init__(self,max_capacity = 200):
         ## use queue
         LayerStore.__init__(self)
         CircularQueue.__init__(self, max_capacity)
         self.queue = CircularQueue(max(self.MIN_CAPACITY,max_capacity))
-        # self.color = None
         self.stack = ArrayStack(max(self.MIN_CAPACITY,max_capacity))
 
 
-        self.reverse = False
-
     def add(self, layer: Layer) -> bool:
+        """
+        Adding the layer color to the the Queue.
+        Big-O otation = O(1)
+
+        Argument:
+            - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return:
+            - Boolean true if its successfully added, false otherwise.
+        """
 
         if layer != None:
             self.color = layer
-            self.queue.append(self.color)
+            self.queue.append(self.color) # appending the layer color to the queue
             return True
         return False
 
@@ -155,7 +185,19 @@ class AdditiveLayerStore(LayerStore):
     def get_color(self, start, timestamp, x, y) -> tuple[int, int, int]:
         """
         Returns the colour this square should show, given the current layers.
+
+        Arguments:
+            - start: a tuple of number of original colour.
+            - timestamp: an event occurences to an accuracy of milisecond (for rainbow and sparkle)
+            - x: the position of x-axis
+            - y: the position of the y-axis
+
+        Return:
+            - self.color: a tuple of number for its (r,g,b).
+
+        Big-O notation: O(n)
         """
+
         self.color = start
         
         if self.color == None:
@@ -168,14 +210,22 @@ class AdditiveLayerStore(LayerStore):
                     self.queue.append (colors)
                 
                 return self.color
-        
 
 
     def erase(self, layer: Layer) -> bool:
         """
         Complete the erase action with this layer
         Returns true if the LayerStore was actually changed.
+
+        Argument:
+            - layer: the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return :
+            - Boolean true if its successfully removed / erased , false otherwise.
+
+        Big-O notation: O(1)
         """
+
         self.color = layer
         if self.color != None:
             self.queue.serve()
@@ -187,11 +237,13 @@ class AdditiveLayerStore(LayerStore):
     def special(self):
         """
         Special mode. Different for each store implementation.
+        
+        Big-O notation: O(n) where n is the length of queue
         """
-        for i in range (len(self.queue)):
-            queue_order = self.queue.serve()
+        for i in range (len(self.queue)): #O(n) where n is the length of queue.
+            queue_order = self.queue.serve() 
             
-            if queue_order != None:
+            if queue_order != None: 
                 self.stack.push(queue_order)
 
         for j in range ((len(self.stack))):
@@ -217,10 +269,16 @@ class SequenceLayerStore(LayerStore):
         """
         Add a layer to the store.
         Returns true if the LayerStore was actually changed.
+
+        Argument:
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return:
+            - Boolean true if its successfully added, false otherwise.
+
         """
         if self.color != layer and ((layer.index+1) not in self.bset):
             self.bset.add(layer.index+1)
-            # self.list.add(layer)
             return True
         
         return False
@@ -229,6 +287,17 @@ class SequenceLayerStore(LayerStore):
     def get_color(self, start, timestamp, x, y) -> tuple[int, int, int]:
         """
         Returns the colour this square should show, given the current layers.
+
+        Arguments:
+            - start: a tuple of number of original colour.
+            - timestamp: an event occurences to an accuracy of milisecond (for rainbow and sparkle)
+            - x: the position of x-axis
+            - y: the position of the y-axis
+
+        Return:
+            - self.color: a tuple of number for its colour (r,g,b)
+
+        Big-O notation: O(n) where n is the length of bitvector in bset.
         """
 
         ## for loop or while loop
@@ -237,12 +306,12 @@ class SequenceLayerStore(LayerStore):
 
         self.color = start
         
-        if self.color == None:
+        if self.color == None: #O(1)
             return self.color
 
-        for i in range (1, self.bset.elems.bit_length()+ 1):
-            if i in self.bset:
-                self.color = get_layers()[i-1].apply(self.color, timestamp, x, y)
+        for i in range (1, self.bset.elems.bit_length()+ 1): #O(n)
+            if i in self.bset: #O(n)
+                self.color = get_layers()[i-1].apply(self.color, timestamp, x, y) #O(1)
 
         return self.color
 
@@ -251,6 +320,12 @@ class SequenceLayerStore(LayerStore):
         """
         Complete the erase action with this layer
         Returns true if the LayerStore was actually changed.
+
+        Argument:
+            - layer: a tuple of the colour informations --> (index, apply, name, bg=(r, g, b))
+
+        Return:
+            - Boolean true if its successfully removed / erased, false otherwise.
         """
         
         self.color = layer
@@ -266,9 +341,8 @@ class SequenceLayerStore(LayerStore):
         """
         Special mode. Different for each store implementation.
         """
-        ##bset , clear the sorted list, then go through everysingle elements in our bset
-        ## use name function 
         
+        ##bset , clear the sorted list, then go through everysingle elements in our bset   
         self.list = ArraySortedList(max(self.MIN_CAPACITY, len(self.bset))) 
 
         if (len(self.bset)) > 0:
@@ -283,17 +357,12 @@ class SequenceLayerStore(LayerStore):
                 mid = (len(self.list)) // 2
 
             self.bset.remove((self.list[mid].value.index) + 1)
-
-            # for i in range (len(self.list)-1,0, -1):
-            #     for j in range (i):
-            #         if self.list[j][0] > self.list[j+1][0]:
-            #             temp = self.list[j]
-            #             self.list[j] = self.list[j+1]
-            #             self.list[j+1] = temp
         
         
 if __name__ == "__main__":
-    # q1 = AdditiveLayerStore(200)
+    q1 = AdditiveLayerStore(200)
+    print (q1.add(black))
+    # print (q1.get_color((0,5,0), 0,3,4))
     # q1.stack.push("red")
     # q1.stack.push("hello")
     # print (q1.special())
@@ -301,7 +370,7 @@ if __name__ == "__main__":
     # s.add("lighten")
     # print (s.color)
     # self.assertEqual(s.get_color((100, 100, 100), 0, 0, 0), (0, 0, 0))
-    s = SequenceLayerStore()
-    s.add(black)
-    s.add(red)
-    print (s.special())
+    # s = SequenceLayerStore()
+    # s.add(black)
+    # s.add(red)
+    # print (s.special())
