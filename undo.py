@@ -18,10 +18,11 @@ class UndoTracker:
 
         If your collection is already full,
         feel free to exit early and not add the action.
+
+        Big-O notation: O(1)
         """
-        if not self.stack_undo.is_full():
-            self.stack_undo.push(action)
-            self.stack_redo.clear()
+        if not self.stack_undo.is_full(): #check whether the stack_undo is full
+            self.stack_undo.push(action) #O(1), if not full add the action to the stack_undo.
         
 
     def undo(self, grid: Grid) -> PaintAction|None:
@@ -30,12 +31,14 @@ class UndoTracker:
         If there are no actions to undo, simply do nothing.
 
         :return: The action that was undone, or None.
+
+        Big-O notation: O(nm * special) where nm is the complexity of grid special, and special is depend on which LayerStore in use. 
         """
 
-        if len(self.stack_undo) > 0:
-            undo_thing = self.stack_undo.pop()
-            undo_thing.undo_apply(grid)
-            self.stack_redo.push(undo_thing)
+        if len(self.stack_undo) > 0: # make sure that the length of stack_undo is more than 0
+            undo_thing = self.stack_undo.pop() # assign the undo_thing with the removed element from stack_undo
+            undo_thing.undo_apply(grid) # apply the removed element  with undo_apply
+            self.stack_redo.push(undo_thing) # push the stack_redo with undo_thing
             return undo_thing
             
         return None
@@ -47,10 +50,12 @@ class UndoTracker:
         If there are no actions to redo, simply do nothing.
 
         :return: The action that was redone, or None.
+
+        Big-O notation: O(nm * special) where nm is the complexity of grid special, and special is depend on which LayerStore in use. 
         """
-        if len(self.stack_redo) > 0:
-            redo_thing = self.stack_redo.pop()
-            redo_thing.redo_apply(grid)
-            self.stack_undo.push(redo_thing)
+        if len(self.stack_redo) > 0: #O(1)
+            redo_thing = self.stack_redo.pop() # assign redo_thing with an element that removed from stack_redo
+            redo_thing.redo_apply(grid) # applying the the redo_thing to the grid
+            self.stack_undo.push(redo_thing) #add the removed element that assigned to redo_thing to the stack_undo
             return redo_thing
         return None

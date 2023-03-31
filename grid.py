@@ -27,10 +27,12 @@ class Grid:
         - x, y: The dimensions of the grid.
 
         Should also intialise the brush size to the DEFAULT provided as a class variable.
+
+        Big-O notation: O(nm) where n is the range of x, and m is the range of y
         """
 
-        self.x =x
-        self.y =y
+        self.x = x
+        self.y = y
         self.draw_style = draw_style
 
         #set the grid
@@ -43,8 +45,8 @@ class Grid:
         if (draw_style in self.DRAW_STYLE_OPTIONS):
             
             #Loop through in each and every grid to instantiate an object of DRAW_STYLE_OPTION
-            for i in range(x): #O(n) --> O(n^2)
-                for j in range(y): # O(n)
+            for i in range(x): #O(n) --> O(nm)
+                for j in range(y): # O(m)
                     if (self.draw_style == self.DRAW_STYLE_SET):
                         self.grid[i][j] = SetLayerStore()
                     elif (self.draw_style == self.DRAW_STYLE_ADD):
@@ -53,37 +55,43 @@ class Grid:
                         self.grid[i][j] = SequenceLayerStore()
             
         else:
-            raise Exception(".")      
+            raise Exception(".") #irrelevant, not part of Big-O    
 
-        self.brush_size = self.DEFAULT_BRUSH_SIZE
+        self.brush_size = self.DEFAULT_BRUSH_SIZE #initialize the brush size as default siz
 
     def increase_brush_size(self):
         """
         Increases the size of the brush by 1,
         if the brush size is already MAX_BRUSH,
         then do nothing.
+
+        Big-O notatio: O(1)
         """
         
         if self.brush_size < self.MAX_BRUSH: #(O(1))
-            self.brush_size += 1
+            self.brush_size += 1 #O(1), increase the brush size
 
     def decrease_brush_size(self):
         """
         Decreases the size of the brush by 1,
         if the brush size is already MIN_BRUSH,
         then do nothing.
+
+        Big-O notation: O(1)
         """
         if self.brush_size > self.MIN_BRUSH: #(O(1))
-            self.brush_size -= 1
+            self.brush_size -= 1 #O(1), decrease the brush size
 
     def special(self):
         """
         Activate the special affect on all grid squares.
+
+        Big-O notation: O(nm)
         """
-        #O(n^2)
-        for i in range (len(self.grid)): #(O(n))
-            for j in range (len(self.grid[i])): #(O(n))
-                self.grid[i][j].special()
+        #O(nm)
+        for i in range (self.x): #(O(n))
+            for j in range (self.y): #(O(m))
+                self.grid[i][j].special() #applying the special in each grid
 
     def __getitem__(self,idx): # magic method to access the grid index --> grid[x][y]
         return self.grid[idx]

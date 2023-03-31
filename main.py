@@ -289,15 +289,20 @@ class MyWindow(arcade.Window):
     # STUDENT PART
 
     def on_init(self):
-        """Initialisation that occurs after the system initialisation."""
-        self.undo_action = UndoTracker()
-        self.replay_action = ReplayTracker()
+        """Initialisation that occurs after the system initialisation.
+        Big-O notation: O(n+m) where n is the initialization of self.undo_aciton with UndoTracker() and m is the initialization of self.replay_action with ReplayTracker()
+        """
+        self.undo_action = UndoTracker() #instantiate the UndoTracker object.
+
+        self.replay_action = ReplayTracker() #instantiate the ReplayTracker object.
 
     def on_reset(self):
-        """Called when a window reset is requested."""
+        """Called when a window reset is requested.
+        Big-O notation: O(n+m)
+        """
 
-        self.undo_action = UndoTracker()
-        self.replay_action = ReplayTracker()
+        self.undo_action = UndoTracker() #instantiate the UndoTracker object.
+        self.replay_action = ReplayTracker() #instantiate the ReplayTracker object.
 
     def on_paint(self, layer: Layer, px, py):
         """
@@ -307,63 +312,82 @@ class MyWindow(arcade.Window):
         layer: The layer being applied.
         px: x position of the brush.
         py: y position of the brush.
+
+        Big-O notation: O(nm) where n is the range of grid x, and m is the range of grid y
         """
         
         p = PaintAction()
         d = self.grid.brush_size
 
-        for i in range (self.grid.x):
-            for j in range (self.grid.y):
-                if (abs(px-i) + abs(py-j)) <= d:
+        for i in range (self.grid.x): #O(n)
+            for j in range (self.grid.y): #O(m)
+                if (abs(px-i) + abs(py-j)) <= d: #using the manhatan distance to find the coordinate of the brush (as a diamond)
                     indicator = self.grid[i][j].add(layer)
 
-                    if indicator == True:
-                        p.add_step(PaintStep((i,j),layer))
-
-
-        self.undo_action.add_action(p)
-        self.replay_action.add_action(p)
+                    if indicator == True: #to check whether the grid is adding the layer colour
+                        p.add_step(PaintStep((i,j),layer)) #if true, add it to the add_step
+        
+        self.undo_action.stack_redo.clear()
+        self.undo_action.add_action(p) #O(1)
+        self.replay_action.add_action(p) #O(1)
         
 
     def on_undo(self):
-        """Called when an undo is requested."""
-        undos = self.undo_action.undo(self.grid)
+        """Called when an undo is requested.
 
-        if undos != None:
+        Big-O notation: O(nm * special) where nm is the complexity of grid special, and special is depend on which LayerStore in use. 
+        """
+        undos = self.undo_action.undo(self.grid) # assign the undo action from self.undo_action that happen in self.grid to the undos
+
+        if undos != None: #check whether the undos is happen, if not none then add the action.
             self.replay_action.add_action(undos, is_undo=True)
         
 
     def on_redo(self):
-        """Called when a redo is requested."""
-        redos = self.undo_action.redo(self.grid)
+        """Called when a redo is requested.
+
+        Big-O notation: O(nm * special) where nm is the complexity of grid special, and special is depend on which LayerStore in use. 
+        """
+        redos = self.undo_action.redo(self.grid) # assign the redo action hfrom self.undo_action that happen in self.grid to redos.
         
-        if redos != None:
-            self.replay_action.add_action(redos)
+        if redos != None: #check whether the redos is happen, if not none then add the action.
+            self.replay_action.add_action(redos) 
 
     def on_special(self):
-        """Called when the special action is requested."""
-        self.grid.special()
-        self.undo_action.add_action(PaintAction(is_special=True))
-        self.replay_action.add_action(PaintAction(is_special=True))
+        """Called when the special action is requested based on which LayerStore are in use.
+    
+        Big-O notation: O(nm * special) where nm is the complexity of grid special, and special is depend on which LayerStore in use. 
+        """
+        self.grid.special() #O(nm)
+        self.undo_action.add_action(PaintAction(is_special=True)) #O(1)
+        self.replay_action.add_action(PaintAction(is_special=True)) #O(1)
 
     def on_replay_start(self):
-        """Called when the replay starting is requested."""
+        """Called when the replay starting is requested.
+        Big-O notation: -
+        """
         self.replay_action.start_replay()
 
     def on_replay_next_step(self) -> bool:
         """
         Called when the next step of the replay is requested.
         Returns whether the replay is finished.
+
+        Big-O notation: O(play_next_action) --> O(n) where n is the number of total step from PaintStep
         """
         return self.replay_action.play_next_action(self.grid)
         
 
     def on_increase_brush_size(self):
-        """Called when an increase to the brush size is requested."""
+        """Called when an increase to the brush size is requested.
+        Big-O notation: O(1)
+        """
         self.grid.increase_brush_size()
 
     def on_decrease_brush_size(self):
-        """Called when a decrease to the brush size is requested."""
+        """Called when a decrease to the brush size is requested.
+        Big-O notation: O(1)
+        """
         self.grid.decrease_brush_size()
 
 def main():
