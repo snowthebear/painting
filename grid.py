@@ -28,7 +28,7 @@ class Grid:
 
         Should also intialise the brush size to the DEFAULT provided as a class variable.
 
-        Big-O notation: O(nm) where n is the range of x, and m is the range of y
+        Big-O notation: O(n + nm) where n is the range of grid of x, and m is the range of y
         """
 
         self.x = x
@@ -36,16 +36,16 @@ class Grid:
         self.draw_style = draw_style
 
         #set the grid
-        self.grid = ArrayR(x) 
+        self.grid = ArrayR(x) # O(n)
 
-        for i in range(len(self.grid)):
-            self.grid[i] = ArrayR(y)
+        for i in range(len(self.grid)): #O(n) --> O(nm)
+            self.grid[i] = ArrayR(y) # O(m)
 
         #set draw_style
         if (draw_style in self.DRAW_STYLE_OPTIONS):
             
             #Loop through in each and every grid to instantiate an object of DRAW_STYLE_OPTION
-            for i in range(x): #O(n) --> O(nm)
+            for i in range(x): #O(n) --> O(nm) for both loop.
                 for j in range(y): # O(m)
                     if (self.draw_style == self.DRAW_STYLE_SET):
                         self.grid[i][j] = SetLayerStore()
@@ -57,7 +57,7 @@ class Grid:
         else:
             raise Exception(".") #irrelevant, not part of Big-O    
 
-        self.brush_size = self.DEFAULT_BRUSH_SIZE #initialize the brush size as default siz
+        self.brush_size = self.DEFAULT_BRUSH_SIZE #initialize the brush size as default size
 
     def increase_brush_size(self):
         """
@@ -68,7 +68,7 @@ class Grid:
         Big-O notatio: O(1)
         """
         
-        if self.brush_size < self.MAX_BRUSH: #(O(1))
+        if self.brush_size < self.MAX_BRUSH: #O(1)
             self.brush_size += 1 #O(1), increase the brush size
 
     def decrease_brush_size(self):

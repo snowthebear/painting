@@ -18,6 +18,8 @@ class ReplayTracker:
         Called whenever we should stop taking actions, and start playing them back.
 
         Useful if you have any setup to do before `play_next_action` should be called.
+        
+        Big-O notation: O(1)
         """
         pass
 
